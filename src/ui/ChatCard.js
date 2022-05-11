@@ -11,12 +11,12 @@ export default function ChatCard ({ avatar, name, time, message, reverse}) {
     return (
         <Card>
             <AvatarWrapper>
-                <Icon color={name==="me"?COLORS.PURPLE:COLORS.BLUE} shape={"circle"} size={"medium"} img={avatar} />
+                <Icon color={name==="human"?COLORS.PURPLE:COLORS.BLUE} shape={"circle"} size={"medium"} img={avatar} />
             </AvatarWrapper>
             <MessageWrapper>
                 <InformationWrapper>
-                    <div style={{"display": "block", "margin-right": "0.5rem"}}>{name}</div>
-                    <div style={{"display": "block", "font-size": "0.7rem", "font-style": "italic", "color": COLORS.GRAY["500"]}}>{`${date}/${month}/${year}`}</div>
+                    <div style={{display: "block", marginRight: "0.5rem"}}>{name}</div>
+                    <div style={{display: "block", fontSize: "0.7rem", fontStyle: "italic", "color": COLORS.GRAY["500"]}}>{`${date}/${month}/${year}`}</div>
                 </InformationWrapper>
                 <MessageBubble>
                     {message}

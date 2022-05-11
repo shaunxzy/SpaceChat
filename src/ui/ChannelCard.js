@@ -12,9 +12,9 @@ const getColorFromState = (state) => {
 
 }
 
-export default function ChannelCard ({ avatar, name, state }) {
+export default function ChannelCard ({ avatar, name, state, click }) {
     return (
-        <Card>
+        <Card onClick={click}>
             <AvatarWrapper>
                 <Icon size={"small"} shape={"circle"} img={avatar} color={COLORS.BLUE} type={"none"}/>
             </AvatarWrapper>

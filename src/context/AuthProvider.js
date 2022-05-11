@@ -23,9 +23,13 @@ const AuthProvider = ({ children }) => {
                     uid: user.uid,
                     username: email,
                     password: password,
-                    profile: {}
+                    channels: {
+                        singular: {},
+                        mutilple: {}
+                    }
+                }).then(ip => {
+                    console.log(ip);
                 })
-                navigate(`/home/${user.uid}`)
             } catch (error) {
                 console.error(error)
             }
@@ -37,7 +41,8 @@ const AuthProvider = ({ children }) => {
         try{
             signInWithEmailAndPassword(auth, email, password).then(UserCredential => {
                 const user = UserCredential.user;
-                navigate(`/home/${user.uid}`)
+
+                return user.uid;
             })
         } catch (error) {
             console.error(error)

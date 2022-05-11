@@ -1,7 +1,8 @@
 import {Route, Routes, useParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import styled from "styled-components/macro"
 import {COLORS} from "../../contants/Contants";
+import { getMessaging, onMessage } from "firebase/messaging";
 
 import SearchBar from "../../ui/SearchBar";
 import PlusButton from "../../ui/PlusButton";
@@ -16,24 +17,67 @@ import cup from "../../assets/utils/cup.png";
 import emoji from "../../assets/utils/emoji.png"
 import settings from "../../assets/utils/settings.png"
 
+import { UseMessage } from "../../tools/UseMessage"
+import { useAuth } from "../../context/AuthProvider";
+import { auth, db } from "../../firebase/customFirebase";
+import { ref, set, get, child } from "firebase/database";
+import { LoadMessage } from "../../tools/LoadMessage";
+import { GetAvatar } from "../../tools/GetAvatar";
+
 const DUMMY_CHANNEL = [
-    {name: "Alien", state: "offline", avatar: alien}
+    {name: "alien", state: "offline", avatar: alien}
 ]
 
 const DUMMY_CHATBOOK = [
-    {name: "me", message: "hello", avatar: human, time: new Date('December 17, 1995 03:24:00')},
-    {name: "other", message: "First Contact Protocol Initiated", avatar: alien, time: new Date('December 17, 1995 03:24:50')},
-    {name: "other", message: "Friend Mod Activated", avatar: alien, time: new Date('December 17, 1995 03:25:10')},
-    {name: "other", message: "hello", avatar: alien, time: new Date('December 17, 1995 03:26:10')},
+    {name: "me", message: "hello", time: new Date('December 17, 1995 03:24:00')},
+    {name: "alien", message: "First Contact Protocol Initiated", time: new Date('December 17, 1995 03:24:50')},
+    {name: "alien", message: "Friend Mod Activated", time: new Date('December 17, 1995 03:25:10')},
+    {name: "alien", message: "hello", time: new Date('December 17, 1995 03:26:10')},
 ]
 
-
 const UserPage = props => {
-    const params = useParams();
-    const [headerLinks, setHeaderLinks] = useState();
+    //const user = useParams()
+
+    const user = "me";
+
+    const messageRef = useRef();
+
+    const [inputValue, setInputValue] = useState("");
     const [isLoading, setIsLoading] = useState(true);
+    const [chatMessaging, setChatMessaging] = useState([]);
+    const myAuth = useAuth();
+
+    const EnterMessage = (e) => {
+        if(e.key === "Enter") {
+            UseMessage({usr: 'me', message: messageRef.current.value});
+            setInputValue("");
+        }
+    }
+
+    const RetrieveChatBook = ( {type, channel} ) => {
+        const dbRef = ref(db)
+        console.log("retrieving...");
+        get(child(dbRef, `users/${user}/channels/${type}/${channel}`)).then(snapshot => {
+            if (snapshot.exists()) {
+                const messageString = snapshot.val();
+                const messageMap = LoadMessage(messageString);
+                setChatMessaging(messageMap);
+                //console.log(LoadMessage(messageString));
+            } else {
+                console.log("No data available")
+            }
+        }).catch(e => {
+            console.error(e);
+        })
+    }
+
+    useEffect(() => {
+        myAuth.login("zyxuxmu@gmail.com", "123123");
 
 
+
+
+    }, [])
 
     return (
         <PageWrapper>
@@ -55,31 +99,47 @@ const UserPage = props => {
             </SideBarWrapper>
             <ChannelWrapper>
                 <SearchBar />
-                {DUMMY_CHANNEL.map(item => <ChannelCard key={item.name} name={item.name} avatar={item.avatar} state={item.state} />)}
+                {DUMMY_CHANNEL.map(item =>
+                    <ChannelCard
+                        key={item.name}
+                        name={item.name}
+                        avatar={GetAvatar(item.name)}
+                        state={item.state}
+                        click={() => RetrieveChatBook({type: 'singular', channel: item.name})}/>)}
                 <PlusButtonWrapper>
-                    <PlusButton size={"medium"}/>
+                    <PlusButton size={"medium"} />
                 </PlusButtonWrapper>
             </ChannelWrapper>
             <ChatPageWrapper>
                 <MainHeader>
-                    <h1 style={{'margin-right': 'auto'}}>Stranger</h1>
+                    <h1 style={{display: 'block', marginRight: 'auto'}}>Stranger</h1>
                     <UtilsBar>
                         <SearchBar />
                         <Settings>
-                            <Icon color={COLORS.WHITE} img={settings} shape={"circle"} size={"small"} />
+                            <Icon
+                                color={COLORS.WHITE}
+                                img={settings}
+                                shape={"circle"}
+                                size={"small"} />
                         </Settings>
                     </UtilsBar>
                 </MainHeader>
                 <ChatPage>
-                    {DUMMY_CHATBOOK.map(item => <ChatCard
+                    {chatMessaging.map(item => <ChatCard
                         key={item.time}
                         name={item.name}
-                        avatar={item.avatar}
-                        time={item.time} message={item.message}
+                        avatar={GetAvatar(item.name)}
+                        time={item.time}
+                        message={item.message}
                         reverse={item.name === "me"}/>)}
                 </ChatPage>
                 <TypeBar>
-                    <TypeInput placeholder={"Type..."}/>
+                    <TypeInput
+                        placeholder={"Type..."}
+                        ref={messageRef}
+                        value={inputValue}
+                        onKeyPress={EnterMessage}
+                        onChange={() => setInputValue(messageRef.current.value)}/>
                     <AddButtonWrapper>
                         <PlusButton size={"small"}/>
                     </AddButtonWrapper>
