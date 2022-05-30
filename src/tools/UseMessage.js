@@ -1,11 +1,16 @@
 import { getDatabase, ref, set } from "firebase/database";
 import { db } from "../firebase/customFirebase";
 
-export function UseMessage ( {usr, message} ) {
+export async function UseMessage ( {user, channel, message, time} ) {
 
-    set(ref(db, `users/${usr}`), {
-        message: message
-    })
+    console.log(`setting at channel/${channel}`)
+
+    await set(ref(db, `channel/${channel}/${time}`), {
+        message: message, name: user
+    }).then(promise => {
+        console.log(`add message to channel/${channel}/${time}`)
+        }
+    )
 
     return 1;
 

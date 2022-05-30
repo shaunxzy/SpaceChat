@@ -12,5 +12,6 @@ export const COLORS = {
     BLUE: "hsl(184deg, 83%, 73%)",
     WHITE: "hsla(0deg, 0%, 100%, 1)",
     LIGHTBLUE: "hsla(191deg, 56%, 96%, 1)",
-    Orange: "hsla(40deg, 95%, 72%, 1)"
+    Orange: "hsla(40deg, 95%, 72%, 1)",
+    LIGHTBLACK: "hsla(0deg, 0%, 20%, 1)"
 }

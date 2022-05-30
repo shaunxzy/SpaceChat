@@ -3,14 +3,13 @@ import alien from "../assets/utils/alien.png";
 
 export const GetAvatar = (name) => {
     switch (name) {
-        case "alien":
-            console.log("return alien")
+        case "Alien":
             return alien;
         case "human":
-            console.log("return human")
+            return human;
+        case "me":
             return human;
         default:
-            console.log("return none")
-            return undefined;
+            return human;
     }
 }

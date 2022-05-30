@@ -1,47 +1,46 @@
 import {useRef, useState} from "react";
 import {useAuth} from "../context/AuthProvider";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import styled from "styled-components/macro";
 
 
-const LoginPage = props => {
+const LoginPage = () => {
     const emailRef = useRef();
     const pswdRef = useRef();
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState()
     const {login} = useAuth();
+    const navigate = useNavigate();
 
     async function handleSubmit (e) {
-        e.preventDefault();
 
-        try {
-            setIsLoading(true);
-            await login(emailRef.current.value, pswdRef.current.value)
-            setIsLoading(false);
-        } catch (error) {
-            setError(error.code);
-            setIsLoading(false);
-        }
+        e.preventDefault()
+
+        await login(emailRef.current.value, pswdRef.current.value).then(uid => {
+            navigate(`/user/${uid}`);
+        }).catch(e => {
+            alert("login failed, please check your email address and password");
+        })
     }
 
     return (
-        <Card>
+        <Card onSubmit={handleSubmit}>
             <Title>Log In</Title>
             <InputWrapper>
-                <p style={{'line-height': '0px'}}>Email</p>
-                <Input />
+                <p style={{lineHeight: '0px'}}>Email</p>
+                <Input ref={emailRef}/>
             </InputWrapper>
             <InputWrapper>
-                <p style={{'line-height': '0px'}}>Password</p>
-                <Input />
+                <p style={{lineHeight: '0px'}}>Password</p>
+                <Input type={"password"}
+                       ref={pswdRef}
+                       autocomplete={"current-password"}/>
             </InputWrapper>
             <ButtonWrapper>
-                <SubmitButton>Log In</SubmitButton>
-                <SubmitButton>Cancel</SubmitButton>
+                <SubmitButton type={"submit"}>Log In</SubmitButton>
+                <SubmitButton onClick={() => navigate("/home")}>Cancel</SubmitButton>
             </ButtonWrapper>
             <AdditionalAction>
-                <p style={{'margin-right': 'auto'}}>Don't have an account?</p>
-                <a href={'/signup'} style={{'text-decoration': "none"}}>Sign Up</a>
+                <p style={{marginRight: 'auto'}}>Don't have an account?</p>
+                <a href={'/signup'} style={{textDecoration: "none"}}>Sign Up</a>
             </AdditionalAction>
         </Card>
     )
@@ -50,7 +49,7 @@ const LoginPage = props => {
 
 export default LoginPage;
 
-const Card = styled.div`
+const Card = styled.form`
   display: grid;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
   gap: 1rem;

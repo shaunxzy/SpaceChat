@@ -32,7 +32,7 @@ const Homepage = props => {
             {loading && <LoadingWrapper><Loading /></LoadingWrapper>}
             <Wrapper style={WrapperReveal()}>
                 <Title>
-                    <p style={{'user-select': "none"}}>SpaceTalk</p>
+                    <p style={{userSelect: "none"}}>SpaceTalk</p>
                     <ButtonWrapper>
                         <Button onClick={toLogin}>Launch</Button>
                         <ButtonReveal onClick={toLogin}>Launch</ButtonReveal>

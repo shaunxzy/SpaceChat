@@ -1,6 +1,7 @@
 import {useReducer, useRef, useState} from "react";
 import {useAuth} from "../context/AuthProvider";
 import styled from "styled-components/macro";
+import {useNavigate} from "react-router-dom";
 
 const initForm = {emailValid: true, pswdValid: true, confirmValid: true, valid: false}
 
@@ -19,52 +20,53 @@ const formReducer = (state, action) => {
 
 
 const SignupForm = props => {
-    const emailRef = useRef();
+    const nameRef = useRef("");
+    const emailRef = useRef("");
     const passwordRef = useRef("");
     const passwordConfirmRef = useRef();
     const {signup, currentUser} = useAuth();
-    const [error, setError] = useState('');
-    const [formValid, dispatchForm] = useReducer(formReducer, initForm)
-    const [isLoading, setIsLoading] = useState(false)
+
+    const navigate = useNavigate();
 
     async function handleSubmit(e) {
         e.preventDefault();
 
-        try {
-            setIsLoading(true);
-            signup(emailRef.current.value, passwordRef.current.value)
-            setIsLoading(false);
-        } catch (e) {
-            setError(e.code);
-            setIsLoading(false);
-        }
+        signup(emailRef.current.value, passwordRef.current.value, nameRef.current.value).then(
+            id => navigate(`/user/${id}`)
+        ).catch(e => {
+            console.log(e);
+        })
 
     }
 
     //console.log(PasswordValidation(passwordRef.current.value));
 
     return (
-        <Card>
+        <Card onSubmit={handleSubmit}>
             <Title>Sign Up</Title>
             <InputWrapper>
-                <p style={{'line-height': '0px'}}>Email</p>
+                <p style={{lineHeight: '0px'}}>Name</p>
+                <Input ref={nameRef}/>
+            </InputWrapper>
+            <InputWrapper>
+                <p style={{lineHeight: '0px'}}>Email</p>
                 <Input ref={emailRef}/>
             </InputWrapper>
             <InputWrapper>
-                <p style={{'line-height': '0px'}}>Password</p>
-                <Input ref={passwordRef}/>
+                <p style={{lineHeight: '0px'}}>Password</p>
+                <Input type={"password"} ref={passwordRef}/>
             </InputWrapper>
             <InputWrapper>
-                <p style={{'line-height': '0px'}}>Confirm password</p>
-                <Input ref={passwordConfirmRef}/>
+                <p style={{lineHeight: '0px'}}>Confirm password</p>
+                <Input type={"password"} ref={passwordConfirmRef}/>
             </InputWrapper>
             <ButtonWrapper>
-                <SubmitButton>Sign Up</SubmitButton>
-                <SubmitButton>Cancel</SubmitButton>
+                <SubmitButton type={'submit'}>Sign Up</SubmitButton>
+                <CancelButton onClick={() => navigate('/home')}>Cancel</CancelButton>
             </ButtonWrapper>
             <AdditionalAction>
-                <p style={{'margin-right': 'auto'}}>Already have an account?</p>
-                <a href={'/login'} style={{'text-decoration': "none"}}>Login</a>
+                <p style={{marginRight: 'auto'}}>Already have an account?</p>
+                <a href={'/login'} style={{textDecoration: "none"}}>Login</a>
             </AdditionalAction>
         </Card>
     )
@@ -72,7 +74,7 @@ const SignupForm = props => {
 
 export default SignupForm;
 
-const Card = styled.div`
+const Card = styled.form`
   display: grid;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
   gap: 0.5rem;
@@ -125,6 +127,9 @@ const SubmitButton = styled.button`
     filter: drop-shadow(0px 1px 1px hsla(0deg, 0%, 0%, 0.6));
     transition: transform 100ms, filter 100ms;
   }
+`
+
+const CancelButton = styled(SubmitButton)`
 `
 
 const AdditionalAction = styled.div`

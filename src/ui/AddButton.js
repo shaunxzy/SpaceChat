@@ -9,12 +9,12 @@ const SIZES = {
     "large": {"--size": "64px"}
 }
 
-export default function PlusButton({size}) {
+export default function AddButton({size, onClick}) {
 
     const sz = SIZES[size];
 
    return (
-       <AddGroupWrapper style={{...sz}}>
+       <AddGroupWrapper style={{...sz}} onClick={onClick}>
            <Texture>
                <Horizontal></Horizontal>
                <Vertical></Vertical>
