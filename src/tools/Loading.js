@@ -3,7 +3,7 @@ import human from "../assets/utils/human.png"
 import alien from "../assets/utils/alien.png"
 import {keyframes} from "styled-components";
 
-export default function Loading () {
+function Loading () {
     return (
         <Wrapper>
             <CardFlipOne><Human alt={"loading-page-human"} src={human}/></CardFlipOne>
@@ -14,6 +14,8 @@ export default function Loading () {
         </Wrapper>
     )
 }
+
+export default Loading;
 
 const flip = keyframes`
   from {

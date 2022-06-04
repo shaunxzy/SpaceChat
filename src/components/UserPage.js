@@ -1,27 +1,15 @@
 import {useNavigate, useParams} from "react-router-dom";
-import {useEffect, useRef, useState, useReducer} from "react";
+import {useEffect, useState, useReducer} from "react";
 import styled from "styled-components/macro"
 
 import { useAuth } from "../context/AuthProvider";
-import { auth, db } from "../firebase/customFirebase";
-import { ref, set, get, child, onChildAdded } from "firebase/database";
-import { FetchMessage } from "../tools/FetchMessage";
+import { db } from "../firebase/customFirebase";
+import { ref, onChildAdded } from "firebase/database";
 import Channel from "./Channel";
 import SideBar from "./SideBar";
 import ChatPage from "./ChatPage";
 import BlankPage from "./BlankPage";
 import {FetchChannel} from "../tools/FetchChannel";
-
-const DUMMY_CHANNEL = [
-    {name: "alien", channelId: "123"}
-]
-
-const DUMMY_CHATBOOK = [
-    {name: "me", message: "hello", time: new Date('December 17, 1995 03:24:00')},
-    {name: "alien", message: "First Contact Protocol Initiated", time: new Date('December 17, 1995 03:24:50')},
-    {name: "alien", message: "Friend Mod Activated", time: new Date('December 17, 1995 03:25:10')},
-    {name: "alien", message: "hello", time: new Date('December 17, 1995 03:26:10')},
-]
 
 const PAGE_STYLES = {
     "default": { gridTemplateColumns: "100px 1fr" },
@@ -61,30 +49,34 @@ const UserPage = props => {
 
     //Update chat messages
     useEffect(() => {
-        console.log(`channel/${channel}`)
-        console.log(user)
+        console.log(channel)
         if (channel !== "") {
-            onChildAdded(ref(db, `channel/${channel}`), data => {
-                FetchMessage(`channel/${channel}`).then(data => {
-                    if (data !== undefined) {
-                        setChatMessaging(data);
-                    }
-                })
+            onChildAdded(ref(db, `channel/${channel}`), dataSnapshot => {
+                const currDate = new Date(dataSnapshot.key)
+                const currMessage = dataSnapshot.val().message
+                const currName = dataSnapshot.val().name
+
+                if (chatMessaging.find( item => item.time.getTime() === currDate.getTime())){
+                    console.log("same key encounter")
+                } else {
+                    setChatMessaging(prev => [...prev, {message: currMessage, name: currName, time: currDate, animation: true}])
+                }
+
             })
         }
 
         onChildAdded(ref(db, `users/${user.uid}/channels/singular`), data => {
             FetchChannel(`users/${user.uid}/channels/singular`).then(data => {
-                console.log(data)
                 setChannelBook(data)
             })
         })
-        console.log(user)
     }, [db, channel, ref, onChildAdded])
 
     //console.log(channelBook, styleState)
     //console.log(chatMessaging)
-    console.log(user)
+    //console.log(user)
+
+
 
     return (
         <PageWrapper style={styleState.pageStyle}>

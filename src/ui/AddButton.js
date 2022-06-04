@@ -4,7 +4,7 @@ import {COLORS} from "../contants/Contants";
 import styled from "styled-components/macro";
 
 const SIZES = {
-    "small": {"--size": "20px"},
+    "small": {"--size": "24px"},
     "medium": {"--size": "56px"},
     "large": {"--size": "64px"}
 }

@@ -1,15 +1,12 @@
 import {DialogOverlay, DialogContent} from "@reach/dialog";
 import styled, {keyframes, css} from "styled-components/macro"
-import {useEffect, useRef, useState} from "react";
+import {useRef, useState} from "react";
 import {COLORS} from "../contants/Contants";
 import "@reach/dialog/styles.css"
 import inviteIcon from "../assets/utils/inviteIcon.png"
 import { RegisterVisitor } from "../tools/RegisterVisitor";
 import {useAuth} from "../context/AuthProvider";
 import {useLocation} from "react-router-dom";
-
-
-
 
 export default function InviteModal ( { showDialog, close }) {
 

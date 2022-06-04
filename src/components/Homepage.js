@@ -1,4 +1,4 @@
-import Header from "../ui/Header"
+
 import styled, { keyframes }  from "styled-components/macro"
 import arrow from "../assets/bg/Arrow 1.png"
 import background from "../assets/bg/bg.png"

@@ -3,11 +3,11 @@ import ChannelCard from "../ui/ChannelCard";
 import {GetAvatar} from "../tools/GetAvatar";
 import AddButton from "../ui/AddButton";
 import {FetchMessage} from "../tools/FetchMessage";
-import {onChildAdded, ref} from "firebase/database";
+import {ref} from "firebase/database";
 import {db} from "../firebase/customFirebase";
 import styled from "styled-components/macro";
 import {COLORS} from "../contants/Contants";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import InviteModal from "./InviteModal";
 
 export default function Channel ({ user, channelBook, setChannel, setMsgRef, setChatMessaging, styleDispatch, setFriend }) {
@@ -19,13 +19,13 @@ export default function Channel ({ user, channelBook, setChannel, setMsgRef, set
     // display chat page of a certain channel
     const RetrieveChatBook = async ( {type, channel, friend} ) => {
 
-        setChannel(channel)
         setFriend(friend)
         setMsgRef(ref(db, `channel/${channel}`))
         FetchMessage(`channel/${channel}`).then(data => {
             //console.log(data)
             setChatMessaging(data);
-        })
+        }).then(data =>
+            setChannel(channel))
 
         styleDispatch({type: "chat"});
     }

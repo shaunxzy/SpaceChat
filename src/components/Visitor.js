@@ -1,7 +1,7 @@
 import styled from "styled-components/macro"
 import { useAuth } from "../context/AuthProvider";
 import {useNavigate, useParams} from "react-router-dom";
-import {useEffect, useReducer, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 
 import ChatPage from "./ChatPage";
 import {onChildAdded, ref} from "firebase/database";
@@ -12,7 +12,6 @@ import {LoadChannelVisitor} from "../tools/LoadInfo";
 
 export default function Visitor() {
     const [visitor, setVisitor] = useState({})
-    const navigator = useNavigate();
     const { id } = useParams()
     const auth = useAuth();
 

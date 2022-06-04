@@ -1,15 +1,29 @@
-import styled from "styled-components/macro";
+import styled, {keyframes, css} from "styled-components/macro";
 import {COLORS} from "../contants/Contants";
 import Icon from "./Icon";
 
-export default function ChatCard ({ avatar, name, time, message, reverse}) {
+const slideIn = keyframes`
+  from {
+    transform: translateX(-100%);
+  } to {
+      transform: translateX(0);
+    }
+`
+
+const slideInAnimation = css`
+  animation: ${slideIn} 500ms backwards ease-in-out;
+`
+
+export default function ChatCard ({ avatar, name, time, message, animation}) {
     const date = time.getDate();
     const month = time.getMonth();
     const year = time.getFullYear();
 
 
+    //console.log(animationStyle)
+
     return (
-        <Card>
+        <Card animation={animation}>
             <AvatarWrapper>
                 <Icon color={name==="human"?COLORS.PURPLE:COLORS.BLUE} shape={"circle"} size={"medium"} img={avatar} />
             </AvatarWrapper>
@@ -26,11 +40,14 @@ export default function ChatCard ({ avatar, name, time, message, reverse}) {
     )
 }
 
+
+
 const Card = styled.div`
   display: flex;
   flex-direction: row;
   
   padding: 0.5rem;
+  animation: ${props => props.animation && css`${slideIn} 100ms backwards ease-in-out`}
 `
 
 const AvatarWrapper = styled.div`

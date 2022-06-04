@@ -2,8 +2,6 @@ import Icon from "../ui/Icon";
 import {COLORS} from "../contants/Contants";
 import human from "../assets/utils/human.png";
 import cup from "../assets/utils/cup.png";
-import radar from "../assets/utils/radar.png";
-import AddButton from "../ui/AddButton";
 import styled from "styled-components/macro";
 import {FetchChannel} from "../tools/FetchChannel";
 
