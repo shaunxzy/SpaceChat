@@ -39,12 +39,13 @@ export default function ChatPage ({ chatMessaging, channel, friend, user }) {
                 {chatMessaging.sort((a,b) => a.time.getTime() - b.time.getTime()).map(item => <ChatCard
                     key={item.time.getTime()}
                     name={item.name}
-                    avatar={GetAvatar(item.name)}
+                    avatar={GetAvatar(item.name === friend? "Alien":"human")}
                     time={item.time}
                     message={item.message}
                     reverse={item.name === "me"}
                     style={item.style}
-                    animation={item.animation}/>)}
+                    animation={item.animation}
+                    color={item.name === friend? "blue":"purple"}/>)}
             </MainChatPage>
             <TypeBar>
                 <TypeInput

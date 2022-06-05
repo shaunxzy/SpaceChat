@@ -1,24 +1,31 @@
 import {useRef, useState} from "react";
 import {useAuth} from "../context/AuthProvider";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import styled from "styled-components/macro";
 
 
 const LoginPage = () => {
     const emailRef = useRef();
     const pswdRef = useRef();
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
     const {login} = useAuth();
     const navigate = useNavigate();
 
     async function handleSubmit (e) {
 
         e.preventDefault()
+        setPassword("")
+        setEmail("")
 
         await login(emailRef.current.value, pswdRef.current.value).then(uid => {
-            navigate(`/user/${uid}`);
-        }).catch(e => {
+            if (uid !== undefined) {
+                navigate(`/user/${uid}`);
+            }
+        }).catch(() => {
             alert("login failed, please check your email address and password");
         })
+
     }
 
     return (
@@ -26,12 +33,17 @@ const LoginPage = () => {
             <Title>Log In</Title>
             <InputWrapper>
                 <p style={{lineHeight: '0px'}}>Email</p>
-                <Input ref={emailRef}/>
+                <Input
+                    ref={emailRef}
+                    value={email}
+                    onChange={() => setEmail(emailRef.current.value)}/>
             </InputWrapper>
             <InputWrapper>
                 <p style={{lineHeight: '0px'}}>Password</p>
                 <Input type={"password"}
                        ref={pswdRef}
+                       value={password}
+                       onChange={() => setPassword(pswdRef.current.value)}
                        autocomplete={"current-password"}/>
             </InputWrapper>
             <ButtonWrapper>

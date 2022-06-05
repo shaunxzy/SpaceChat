@@ -3,7 +3,6 @@ import { ref, set } from "firebase/database"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import {useContext, useEffect, useState} from "react";
 import AuthContext from "./AuthContext";
-import {useNavigate} from "react-router-dom";
 import {FetchVisitor} from "../tools/FetchVisitor";
 import {FetchUser} from "../tools/FetchUser";
 
@@ -14,7 +13,7 @@ export function useAuth() {
 const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("user")));
     const [currentVisitor, setCurrentVisitor] = useState(JSON.parse(localStorage.getItem("visitor")))
-    const navigate = useNavigate();
+
 
     async function signup(email, password, name) {
         //console.log(email, password)
@@ -60,8 +59,9 @@ const AuthProvider = ({ children }) => {
             })
 
             return user.uid;
-        }).catch(e => {
-            console.log(e);
+        }).catch(() => {
+            alert("login failed, please check your email address and password");
+            return undefined
         })
     }
 

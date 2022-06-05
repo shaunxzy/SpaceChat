@@ -17,14 +17,14 @@ export default function Channel ({ user, channelBook, setChannel, setMsgRef, set
     const close = () => {setAddModal(false)};
 
     // display chat page of a certain channel
-    const RetrieveChatBook = async ( {type, channel, friend} ) => {
+    const RetrieveChatBook = async ( {channel, friend} ) => {
 
         setFriend(friend)
         setMsgRef(ref(db, `channel/${channel}`))
         FetchMessage(`channel/${channel}`).then(data => {
             //console.log(data)
             setChatMessaging(data);
-        }).then(data =>
+        }).then(() =>
             setChannel(channel))
 
         styleDispatch({type: "chat"});
@@ -41,7 +41,7 @@ export default function Channel ({ user, channelBook, setChannel, setMsgRef, set
                     <ChannelCard
                         key={item.channelId}
                         name={item.name}
-                        avatar={GetAvatar(item.name)}
+                        avatar={GetAvatar("Alien")}
                         state={item.state}
                         click={() => RetrieveChatBook({type: 'singular', channel: item.channelId, friend:item.name})}/>)}
             </ChannelCardWrapper>

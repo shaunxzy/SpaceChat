@@ -1,64 +1,81 @@
-import {useReducer, useRef, useState} from "react";
+import {useRef, useState} from "react";
 import {useAuth} from "../context/AuthProvider";
 import styled from "styled-components/macro";
 import {useNavigate} from "react-router-dom";
 
-const initForm = {emailValid: true, pswdValid: true, confirmValid: true, valid: false}
 
-const formReducer = (state, action) => {
-    switch (action.type){
-        case "SET_EMAIL":
-            return {...state, emailValid: action.value, valid: state.pswdValid && state.confirmValid && action.value}
-        case "SET_PSWD":
-            return {...state, pswdValid: action.value, valid: state.emailValid && state.confirmValid && action.value}
-        case "SET_CONFIRM":
-            return {...state, confirmValid: action.value, valid: state.pswdValid && state.emailValid && action.value}
-        default:
-            return state;
-    }
-}
-
-
-const SignupForm = props => {
+const SignupForm = () => {
     const nameRef = useRef("");
     const emailRef = useRef("");
     const passwordRef = useRef("");
     const passwordConfirmRef = useRef();
-    const {signup, currentUser} = useAuth();
+    const {signup} = useAuth();
+
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [passwordConfirm, setPasswordConfirm] = useState("")
 
     const navigate = useNavigate();
 
     async function handleSubmit(e) {
         e.preventDefault();
 
-        signup(emailRef.current.value, passwordRef.current.value, nameRef.current.value).then(
-            id => navigate(`/user/${id}`)
-        ).catch(e => {
-            console.log(e);
-        })
+        if (passwordRef.current.value === passwordConfirmRef.current.value) {
+            signup(emailRef.current.value, passwordRef.current.value, nameRef.current.value).then(
+                id => {
+                    setName("")
+                    setEmail("")
+                    setPassword("")
+                    setPasswordConfirm("")
+                    navigate(`/user/${id}`)
+                }
+            ).catch(e => {
+                console.log(e);
+            })
+        } else{
+            alert("confirm password must match your password")
+            setName("")
+            setEmail("")
+            setPassword("")
+            setPasswordConfirm("")
+        }
 
     }
 
-    //console.log(PasswordValidation(passwordRef.current.value));
 
     return (
         <Card onSubmit={handleSubmit}>
             <Title>Sign Up</Title>
             <InputWrapper>
                 <p style={{lineHeight: '0px'}}>Name</p>
-                <Input ref={nameRef}/>
+                <Input
+                    ref={nameRef}
+                    value={name}
+                    onChange={() => setName(nameRef.current.value)}/>
             </InputWrapper>
             <InputWrapper>
                 <p style={{lineHeight: '0px'}}>Email</p>
-                <Input ref={emailRef}/>
+                <Input
+                    ref={emailRef}
+                    value={email}
+                    onChange={() => setEmail(emailRef.current.value)}/>
             </InputWrapper>
             <InputWrapper>
                 <p style={{lineHeight: '0px'}}>Password</p>
-                <Input type={"password"} ref={passwordRef}/>
+                <Input
+                    type={"password"}
+                    ref={passwordRef}
+                    value={password}
+                    onChange={() => setPassword(passwordRef.current.value)}/>
             </InputWrapper>
             <InputWrapper>
                 <p style={{lineHeight: '0px'}}>Confirm password</p>
-                <Input type={"password"} ref={passwordConfirmRef}/>
+                <Input
+                    type={"password"}
+                    ref={passwordConfirmRef}
+                    value={passwordConfirm}
+                    onChange={() => setPasswordConfirm(passwordConfirmRef.current.value)}/>
             </InputWrapper>
             <ButtonWrapper>
                 <SubmitButton type={'submit'}>Sign Up</SubmitButton>
@@ -135,12 +152,4 @@ const CancelButton = styled(SubmitButton)`
 const AdditionalAction = styled.div`
   display: flex;
   flex-direction: row;
-`
-
-const ValididtyCheck = styled.div`
-  position: absolute;
-  background-color: white;
-  width: 200px;
-  height: 200px;
-  
 `

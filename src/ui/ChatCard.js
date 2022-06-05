@@ -10,22 +10,17 @@ const slideIn = keyframes`
     }
 `
 
-const slideInAnimation = css`
-  animation: ${slideIn} 500ms backwards ease-in-out;
-`
-
-export default function ChatCard ({ avatar, name, time, message, animation}) {
+export default function ChatCard ({ avatar, name, time, message, animation, color}) {
     const date = time.getDate();
-    const month = time.getMonth();
+    const month = time.getMonth() + 1;
     const year = time.getFullYear();
 
-
-    //console.log(animationStyle)
+   //console.log(avatar)
 
     return (
         <Card animation={animation}>
             <AvatarWrapper>
-                <Icon color={name==="human"?COLORS.PURPLE:COLORS.BLUE} shape={"circle"} size={"medium"} img={avatar} />
+                <Icon color={color==="purple"?COLORS.PURPLE:COLORS.BLUE} shape={"circle"} size={"medium"} img={avatar} />
             </AvatarWrapper>
             <MessageWrapper>
                 <InformationWrapper>
