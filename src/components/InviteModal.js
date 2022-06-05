@@ -1,19 +1,18 @@
 import {DialogOverlay, DialogContent} from "@reach/dialog";
-import styled, {keyframes, css} from "styled-components/macro"
+import styled, {keyframes} from "styled-components/macro"
 import {useRef, useState} from "react";
 import {COLORS} from "../contants/Contants";
 import "@reach/dialog/styles.css"
 import inviteIcon from "../assets/utils/inviteIcon.png"
 import { RegisterVisitor } from "../tools/RegisterVisitor";
 import {useAuth} from "../context/AuthProvider";
-import {useLocation} from "react-router-dom";
 
 export default function InviteModal ( { showDialog, close }) {
 
     const nameRef = useRef("");
     const passwordRef = useRef("");
     const copyButtonWrapper = useRef("")
-    const loc = useLocation()
+
 
 
     const [displayState, setDisplayState] = useState({display: "landing"});
@@ -90,7 +89,7 @@ export default function InviteModal ( { showDialog, close }) {
                 {displayState.display === "invite" &&
                 <InviteResult>
                     <p>Link Created! Copy the following link and send it to your friend</p>
-                    <p>{visitor.link}</p>
+                    <p>https://spacechat.net/{visitor.link}</p>
                     <p>Your friend need the following password to get access</p>
                     <p>Password: {visitor.password}</p>
                     <CopyButtonWrapper ref={copyButtonWrapper}>
@@ -119,10 +118,6 @@ const fadeIn = keyframes`
   to {
     opacity: 1;
   }
-`
-
-const fadeAwayAnime = css`
-  animation: ${fadeAway} 500ms forwards;
 `
 
 const ModalWrapper = styled(DialogContent)`
