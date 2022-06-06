@@ -40,7 +40,7 @@ export default function ChatPage ({ chatMessaging, channel, friend, userName }) 
     useEffect(() => {
         chatPageRef.current.scrollTop = chatPageRef.current.scrollHeight
         //console.log('page change')
-    }, [chatPageRef.current, chatMessaging])
+    }, [chatPageRef, chatMessaging])
 
 
     return (

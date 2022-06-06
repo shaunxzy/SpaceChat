@@ -100,7 +100,7 @@ const UserPage = () => {
         }
     }
 
-    console.log(phase)
+    //console.log(phase)
 
     return (
         <PageWrapper style={styleState.pageStyle}>
@@ -114,7 +114,6 @@ const UserPage = () => {
                 setChannel={setChannel}
                 channelBook={channelBook}
                 setChatMessaging={setChatMessaging}
-                setMsgRef={setMsgRef}
                 styleDispatch={dispatch}
                 setFriend={setFriend}
                 movePhase={moveToNextPhase}/>}

@@ -45,7 +45,7 @@ export default function Visitor() {
             })
         }
 
-    }, [auth.visitor, id])
+    }, [auth.visitor, id, navigate])
 
     console.log(`current channel is channel/${channel}`)
 
@@ -60,7 +60,7 @@ export default function Visitor() {
                 })
             })
         }
-    }, [db, channel, setChatMessaging])
+    }, [channel, setChatMessaging])
 
     //console.log(channelBook, styleState)
     console.log(visitor);
