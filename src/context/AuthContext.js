@@ -5,7 +5,8 @@ const AuthContext = createContext({
     visitor: {},
     loginVisitor: () => {},
     signup: ()=>{},
-    login: ()=>{}
+    login: ()=>{},
+    finishTutorial: () => {}
 })
 
 export default AuthContext;

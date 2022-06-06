@@ -26,9 +26,9 @@ const AuthProvider = ({ children }) => {
                 email: email,
                 password: password,
                 channels: {
-                    singular: {},
-                    mutilple: {}
-                }
+                    singular: {}
+                },
+                firstUse: true
             }
 
             setCurrentUser(userInfo);
@@ -81,6 +81,14 @@ const AuthProvider = ({ children }) => {
         })
     }
 
+    async function finishTut({ id }) {
+        console.log(`${id} finished tutorial`)
+        return await set(ref(db, `users/${id}/firstUse`), false).then(() => {
+            setCurrentUser(prev => {return {...prev, firstUse: false}});
+            localStorage.setItem("user", JSON.stringify({...currentUser, firstUse: false}));
+        })
+    }
+
     useEffect(() => {
         //console.log('render')
         const unsubscribe = auth.onAuthStateChanged(user => {
@@ -100,7 +108,8 @@ const AuthProvider = ({ children }) => {
         visitor: currentVisitor,
         loginVisitor: visitorLogin,
         signup: signup,
-        login: login
+        login: login,
+        finishTutorial: finishTut,
     }
 
     return (

@@ -52,7 +52,7 @@ export default function Visitor() {
     //Update chat messages
     useEffect(() => {
         if (channel !== "") {
-            onChildAdded(ref(db, `channel/${channel}`), data => {
+            onChildAdded(ref(db, `channel/${channel}`), () => {
                 FetchMessage(`channel/${channel}`).then(data => {
                     if (data !== null) {
                         setChatMessaging(data);
@@ -68,7 +68,7 @@ export default function Visitor() {
         <PageWrapper>
             <ChatPage
                 chatMessaging={chatMessaging}
-                user={visitor.name}
+                userName={visitor.name}
                 channel={channel}
                 friend={visitor.hostname}/>
         </PageWrapper>

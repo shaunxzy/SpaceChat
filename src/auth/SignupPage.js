@@ -1,6 +1,4 @@
-import AuthProvider from "../context/AuthProvider";
 import SignupForm from "./SignupForm";
-import {Container} from "react-bootstrap";
 import styled from "styled-components/macro";
 
 const SignupPage = () => {

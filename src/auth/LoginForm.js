@@ -28,6 +28,7 @@ const LoginPage = () => {
 
     }
 
+
     return (
         <Card onSubmit={handleSubmit}>
             <Title>Log In</Title>
@@ -57,7 +58,6 @@ const LoginPage = () => {
         </Card>
     )
 }
-
 
 export default LoginPage;
 

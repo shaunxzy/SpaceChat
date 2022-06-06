@@ -6,8 +6,9 @@ import {COLORS} from "../contants/Contants";
 import {useEffect, useRef, useState} from "react";
 import MainHeader from "./MainHeader";
 import {UseMessage} from "../tools/UseMessage";
+import {useAuth} from "../context/AuthProvider";
 
-export default function ChatPage ({ chatMessaging, channel, friend, user }) {
+export default function ChatPage ({ chatMessaging, channel, friend, userName }) {
 
     const messageRef = useRef("")
     const chatPageRef = useRef()
@@ -15,11 +16,21 @@ export default function ChatPage ({ chatMessaging, channel, friend, user }) {
 
     //console.log(chatMessaging)
 
+    const { user } = useAuth()
+
+    //console.log(friend)
+
     const EnterMessage = (e) => {
         if(e.key === "Enter") {
             if (messageRef.current.value !== "") {
-                console.log(`setting message in ${channel}`)
-                UseMessage({user: user, message: messageRef.current.value, time: Date(), channel: channel});
+                //console.log(`setting message in ${channel}`)
+                UseMessage({
+                    user: userName,
+                    message: messageRef.current.value,
+                    time: Date(),
+                    channel: channel,
+                    userId: user.uid,
+                    friendId: friend.id});
             }
             setInputValue("");
         }
@@ -34,18 +45,18 @@ export default function ChatPage ({ chatMessaging, channel, friend, user }) {
 
     return (
         <ChatPageWrapper>
-            <MainHeader name={friend}/>
+            <MainHeader name={friend.name}/>
             <MainChatPage ref={chatPageRef}>
                 {chatMessaging.sort((a,b) => a.time.getTime() - b.time.getTime()).map(item => <ChatCard
                     key={item.time.getTime()}
                     name={item.name}
-                    avatar={GetAvatar(item.name === friend? "Alien":"human")}
+                    avatar={GetAvatar(item.name === friend.name? "Alien":"human")}
                     time={item.time}
                     message={item.message}
                     reverse={item.name === "me"}
                     style={item.style}
                     animation={item.animation}
-                    color={item.name === friend? "blue":"purple"}/>)}
+                    color={item.name === friend.name? "blue":"purple"}/>)}
             </MainChatPage>
             <TypeBar>
                 <TypeInput

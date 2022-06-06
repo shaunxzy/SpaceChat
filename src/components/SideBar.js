@@ -6,7 +6,7 @@ import styled from "styled-components/macro";
 import {FetchChannel} from "../tools/FetchChannel";
 
 
-export default function SideBar ({ styleDispatch, setChannelBook, user }) {
+export default function SideBar ({ styleDispatch, setChannelBook, user, movePhase }) {
     return (
         <SideBarWrapper>
             <UserIconWrapper>
@@ -16,9 +16,11 @@ export default function SideBar ({ styleDispatch, setChannelBook, user }) {
                 <SingleGroup onClick={async () => {
                     await FetchChannel(`users/${user}/channels/singular`).then(
                         data => {
+                            //console.log(data)
+                            movePhase();
                             setChannelBook(data);
                         }
-                    ).then(value => {
+                    ).then(() => {
                         styleDispatch({type: "channel"});
                     })
 
@@ -34,6 +36,10 @@ export default function SideBar ({ styleDispatch, setChannelBook, user }) {
 const SideBarWrapper = styled.div`
   border: 1px solid ${COLORS.GRAY["300"]};
   padding: var(--padding) calc(var(--padding) / 10);
+  background-color: white;
+  
+  isolation: isolate;
+  z-index: 1;
 `
 
 const UserIconWrapper = styled.div`
@@ -42,6 +48,13 @@ const UserIconWrapper = styled.div`
   padding-bottom: var(--padding);
   display: grid;
   place-content: center;
+  filter: brightness(100%);
+  transition: filter 150ms ease-in-out;
+  
+  &:hover{
+    filter: brightness(80%);
+    transition: filter 100ms ease-in-out;
+  }
 `
 
 
@@ -55,16 +68,16 @@ const GroupSelectWrapper = styled.div`
 `
 
 const SingleGroup = styled.div`
+  filter: brightness(100%);
+  transition: filter 150ms ease-in-out;
+
+  &:hover{
+    filter: brightness(90%);
+    transition: filter 100ms ease-in-out;
+  }
   
-`
-
-const AddButtonWrapper = styled.div`
-  display: grid;
-  place-content: center;
-  padding: var(--padding);
-`
-
-
-const MultiGroup = styled.div`
-
+  &:active {
+    filter: brightness(80%);
+    transition: filter 100ms ease-in-out;
+  }
 `

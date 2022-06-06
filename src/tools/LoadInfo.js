@@ -30,3 +30,13 @@ export const LoadChannelVisitor = channelString => {
 
     return result[0];
 }
+
+export const findMaxTime = messageBook => {
+    let result = -1
+    messageBook.forEach(item => {
+        if (result < item.time.getTime()) {
+            result = item.time.getTime()
+        }
+    })
+    return result
+}
