@@ -1,5 +1,4 @@
 import styled from "styled-components/macro";
-import { COLORS } from "../../contants/Contants";
 
 
 const ContainedImg = styled.img`

@@ -1,63 +1,70 @@
-import { useEffect, useState } from "react";
-import styled from "styled-components/macro";
-import { useAuth } from "../../context/AuthProvider";
-import { getAvatarURL, uploadAvatar } from "../../tools/Avatar";
-import { AvatarImage } from "./Avatar";
+import React, { useState } from 'react';
 import { COLORS } from "../../contants/Contants";
-import { Button, UploadButton } from "./avatarButtons";
+import styled from "styled-components/macro";
+import AvatarInspector from './AvatarInspector';
+import DefaultAvatarSelector from './DefaultAvatarSelector';
+import { selectFromDefaultAvatar } from '../../tools/Avatar';
+import { useAuth } from '../../context/AuthProvider';
 
 
 export default function AvatarModal() {
+    const [page, setPage] = useState("inspector"); // inspector avatar-selector
     const { user } = useAuth();
-
-    const [avatarURL, setAvatarURL] = useState(null);
-
-    const fetchAvatar = async () => {
-        if (!user) return;
-        const url = await getAvatarURL(user.uid);
-        setAvatarURL(url);
-    };
-    useEffect(() => {
-        fetchAvatar();
-    }, [user]);
-
-    const onUpload = async (image) => {
-        if (!user || !image) return;
-        await uploadAvatar(user.uid, image);
-        fetchAvatar();
-    };
 
     return (
         <Centered>
-            <Wrapper>
-                <CloseButton style={{ top: 0, right: 0, position: "absolute", }}>×</CloseButton>
+            <button style={{ position: "fixed", left: 0, top: 0, display: "block" }} onClick={() => {
+                if (page === "inspector") setPage("avatar-selector");
+                if (page === "avatar-selector") setPage("inspector");
+            }}>toggle page (debug)</button>
 
-                <AvatarImage src={avatarURL} />
+            <Card>
+                <AvatarInspector
+                    style={{ left: page === "inspector" ? 0 : "-100%" }}
+                    onShowAvatarSelector={() => {
+                        setPage('avatar-selector');
+                    }} />
 
-                <Button>Select from default</Button>
-                <UploadButton onFileSelected={onUpload}>Upload</UploadButton>
+                <DefaultAvatarSelector
+                    style={{ left: page === "avatar-selector" ? "-100%" : 0 }}
+                    onSelected={async (imageRef) => {
+                        if (!user) return;
+                        await selectFromDefaultAvatar(user.uid, imageRef);
+                        setPage('inspector');
+                    }}
+                />
 
-            </Wrapper>
+                <CloseButton style={{ top: 0, right: 0, position: "absolute" }}
+                    onClick={() => {
+                        if (page === "avatar-selector") {
+                            setPage("inspector");
+                        }
+                    }}
+                >×</CloseButton>
+            </Card>
         </Centered >
     );
 }
 
 
-const Wrapper = styled.div`
+const Card = styled.div`
 width: 400px;
 height: 500px;
 background-color: ${COLORS.GRAY["100"]};
 border: 1px solid gray;
 border-radius: 10px;
-padding: 1rem;
 
+overflow: hidden;
 display: flex;
-justify-content: space-evenly;
-align-items: center;
-flex-direction: column;
+flex-direction: row;
 
 position: relative;
-overflow: hidden;
+
+& > * {
+    transition: left 0.4s;
+    flex: none;
+    position: relative;
+}
 `;
 
 const Centered = styled.div`

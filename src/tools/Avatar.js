@@ -1,4 +1,4 @@
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { getBlob, getDownloadURL, list, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../firebase/customFirebase";
 
 export async function getAvatarURL(uid) {
@@ -15,8 +15,25 @@ export async function getAvatarURL(uid) {
     return url;
 };
 
+export async function getSharedAvatarURLs() {
+    const refShared = ref(storage, '/avatar/shared/');
+    const avatarRefs = await list(refShared, { maxResults: 100 });
+    const avatarURLs = await Promise.all(
+        avatarRefs.items.map(async (ref) => {
+            return { ref, url: await getDownloadURL(ref) };
+        })
+    );
+    return avatarURLs;
+}
+
 export async function uploadAvatar(uid, image) {
     const refAvatar = ref(storage, `/avatar/uploaded/${uid}`);
     await uploadBytes(refAvatar, image);
     // upload done if no error raised
+}
+
+export async function selectFromDefaultAvatar(uid, avatarRef) {
+    const selectedImage = await getBlob(avatarRef);
+    const refAvatar = ref(storage, `/avatar/uploaded/${uid}`);
+    await uploadBytes(refAvatar, selectedImage);
 }
