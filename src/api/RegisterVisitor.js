@@ -19,6 +19,6 @@ export const RegisterVisitor = ({ host, hostname, name, password }) => {
     const visitorId = uuidv4()
 
     return Register(host, hostname, name, password, visitorId).then(data => data &&
-        {link: `visitor/${visitorId}`, password: password})
+        {link: `visitor/auth/${visitorId}`, password: password})
 
 }

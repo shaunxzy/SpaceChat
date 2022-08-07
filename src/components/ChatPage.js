@@ -1,11 +1,11 @@
 import ChatCard from "../ui/ChatCard";
-import {GetAvatar} from "../tools/GetAvatar";
+import {GetAvatar} from "../api/GetAvatar";
 import AddButton from "../ui/AddButton";
 import styled from "styled-components/macro";
 import {COLORS} from "../contants/Contants";
 import {useEffect, useRef, useState} from "react";
 import MainHeader from "./MainHeader";
-import {UseMessage} from "../tools/UseMessage";
+import {UseMessage} from "../api/UseMessage";
 import {useAuth} from "../context/AuthProvider";
 
 export default function ChatPage ({ chatMessaging, channel, friend, userName }) {

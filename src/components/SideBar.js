@@ -3,7 +3,7 @@ import {COLORS} from "../contants/Contants";
 import human from "../assets/utils/human.png";
 import cup from "../assets/utils/cup.png";
 import styled from "styled-components/macro";
-import {FetchChannel} from "../tools/FetchChannel";
+import {FetchChannel} from "../api/FetchChannel";
 
 
 export default function SideBar ({ styleDispatch, setChannelBook, user, movePhase }) {

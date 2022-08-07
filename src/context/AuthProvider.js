@@ -3,8 +3,8 @@ import { ref, set } from "firebase/database"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import {useContext, useEffect, useState} from "react";
 import AuthContext from "./AuthContext";
-import {FetchVisitor} from "../tools/FetchVisitor";
-import {FetchUser} from "../tools/FetchUser";
+import {FetchVisitor} from "../api/FetchVisitor";
+import {FetchUser} from "../api/FetchUser";
 
 export function useAuth() {
     return useContext(AuthContext)

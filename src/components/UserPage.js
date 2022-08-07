@@ -8,7 +8,7 @@ import Channel from "./Channel";
 import SideBar from "./SideBar";
 import ChatPage from "./ChatPage";
 import BlankPage from "./BlankPage";
-import {FetchChannel} from "../tools/FetchChannel";
+import {FetchChannel} from "../api/FetchChannel";
 
 const PAGE_STYLES = {
     "default": { gridTemplateColumns: "100px 1fr" },

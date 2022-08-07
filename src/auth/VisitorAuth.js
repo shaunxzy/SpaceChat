@@ -4,7 +4,7 @@ import {useEffect, useRef, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 
 import {useAuth} from "../context/AuthProvider";
-import { CreateChannelSingular } from "../tools/CreateChannelSingular";
+import { CreateChannelSingular } from "../api/CreateChannelSingular";
 
 export default function VisitorAuth() {
     const { id } = useParams()
