@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { COLORS } from "../../contants/Contants";
 import styled from "styled-components/macro";
 import AvatarInspector from './AvatarInspector';
 import DefaultAvatarSelector from './DefaultAvatarSelector';
-import { selectFromDefaultAvatar } from '../../api/Avatar';
+import { getAvatarURL, selectFromDefaultAvatar } from '../../api/Avatar';
 import { useAuth } from '../../context/AuthProvider';
 
 
 export default function AvatarModal() {
-    const [page, setPage] = useState("inspector"); // inspector avatar-selector
     const { user } = useAuth();
+
+    const [page, setPage] = useState("inspector"); // inspector avatar-selector
+
+    const [avatarURL, setAvatarURL] = useState(null);
+    const fetchAvatar = async () => {
+        if (!user) return;
+        const url = await getAvatarURL(user.uid);
+        setAvatarURL(url);
+    };
+    useEffect(() => {
+        fetchAvatar();
+    }, [user]);
 
     return (
         <Centered>
@@ -20,6 +31,8 @@ export default function AvatarModal() {
 
             <Card>
                 <AvatarInspector
+                    avatarURL={avatarURL}
+                    onAvatarChanged={fetchAvatar}
                     style={{ left: page === "inspector" ? 0 : "-100%" }}
                     onShowAvatarSelector={() => {
                         setPage('avatar-selector');
@@ -30,6 +43,7 @@ export default function AvatarModal() {
                     onSelected={async (imageRef) => {
                         if (!user) return;
                         await selectFromDefaultAvatar(user.uid, imageRef);
+                        await fetchAvatar();
                         setPage('inspector');
                     }}
                 />

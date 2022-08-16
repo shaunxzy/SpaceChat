@@ -7,25 +7,13 @@ import { AvatarImage } from "./Avatar";
 import { Button, UploadButton } from "./avatarButtons";
 
 
-export default function AvatarInspector({ style, onShowAvatarSelector }) {
+export default function AvatarInspector({ style, onShowAvatarSelector, avatarURL, onAvatarChanged }) {
     const { user } = useAuth();
-
-    const [avatarURL, setAvatarURL] = useState(null);
-
-    const fetchAvatar = async () => {
-        if (!user) return;
-        const url = await getAvatarURL(user.uid);
-        setAvatarURL(url);
-    };
-    useEffect(() => {
-        fetchAvatar();
-        getSharedAvatarURLs();
-    }, [user]);
 
     const onUpload = async (image) => {
         if (!user || !image) return;
         await uploadAvatar(user.uid, image);
-        fetchAvatar();
+        onAvatarChanged();
     };
 
     return (
