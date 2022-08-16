@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components/macro";
 import { useAuth } from "../../context/AuthProvider";
-import { getAvatarURL, getSharedAvatarURLs, uploadAvatar } from "../../tools/Avatar";
+import { getAvatarURL, getSharedAvatarURLs, uploadAvatar } from "../../api/Avatar";
 import { AvatarImage } from "./Avatar";
 
 import { Button, UploadButton } from "./avatarButtons";

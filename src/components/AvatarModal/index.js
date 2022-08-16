@@ -3,7 +3,7 @@ import { COLORS } from "../../contants/Contants";
 import styled from "styled-components/macro";
 import AvatarInspector from './AvatarInspector';
 import DefaultAvatarSelector from './DefaultAvatarSelector';
-import { selectFromDefaultAvatar } from '../../tools/Avatar';
+import { selectFromDefaultAvatar } from '../../api/Avatar';
 import { useAuth } from '../../context/AuthProvider';
 
 
