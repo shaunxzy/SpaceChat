@@ -65,4 +65,6 @@ const MessageBubble = styled.div`
   background-color: ${COLORS.LIGHTGREEN};
   padding: 0.2rem 0.5rem;
   border-radius: 5px;
+  
+  word-wrap: break-word;
 `

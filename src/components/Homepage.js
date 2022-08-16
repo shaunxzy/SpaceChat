@@ -3,7 +3,7 @@ import styled, { keyframes }  from "styled-components/macro"
 import arrow from "../assets/bg/Arrow 1.png"
 import background from "../assets/bg/bg.png"
 import {useEffect, useState} from "react";
-import Loading from "../tools/Loading";
+import Loading from "../api/Loading";
 import {useNavigate} from "react-router-dom";
 
 const Homepage = props => {

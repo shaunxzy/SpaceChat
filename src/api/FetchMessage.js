@@ -2,6 +2,7 @@ import {child, get, ref} from "firebase/database";
 import {LoadMessage} from "./LoadInfo";
 import { db } from "../firebase/customFirebase";
 
+
 export const FetchMessage = async (pathWay) => {
 
     return await get(child(ref(db), pathWay)).then(snapshot => {

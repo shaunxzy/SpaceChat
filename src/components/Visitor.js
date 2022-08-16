@@ -5,10 +5,10 @@ import {useEffect, useState} from "react";
 
 import ChatPage from "./ChatPage";
 import {onChildAdded, ref} from "firebase/database";
-import {FetchMessage} from "../tools/FetchMessage";
+import {FetchMessage} from "../api/FetchMessage";
 import {db} from "../firebase/customFirebase";
-import {FetchVisitor} from "../tools/FetchVisitor";
-import {LoadChannelVisitor} from "../tools/LoadInfo";
+import {FetchVisitor} from "../api/FetchVisitor";
+import {LoadChannelVisitor} from "../api/LoadInfo";
 
 export default function Visitor() {
     const [visitor, setVisitor] = useState({})

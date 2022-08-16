@@ -3,7 +3,7 @@ import {COLORS} from "../contants/Contants";
 import human from "../assets/utils/human.png";
 import cup from "../assets/utils/cup.png";
 import styled from "styled-components/macro";
-import {FetchChannel} from "../tools/FetchChannel";
+import {FetchUserChannels} from "../api/FetchUserChannels";
 
 
 export default function SideBar ({ styleDispatch, setChannelBook, user, movePhase }) {
@@ -14,7 +14,7 @@ export default function SideBar ({ styleDispatch, setChannelBook, user, movePhas
             </UserIconWrapper>
             <GroupSelectWrapper>
                 <SingleGroup onClick={async () => {
-                    await FetchChannel(`users/${user}/channels/singular`).then(
+                    await FetchUserChannels(`users/${user}/channels/singular`).then(
                         data => {
                             //console.log(data)
                             movePhase();

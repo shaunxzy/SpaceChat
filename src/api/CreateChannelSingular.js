@@ -13,7 +13,7 @@ const WriteChannel = async (channelId, user1, user2, name) => {
                 return data
             })
         } else {
-            console.log(`user ${user1} not found`)
+            return Promise.reject('no such user')
         }
     })
 
@@ -36,4 +36,21 @@ export const CreateChannelSingular = async (user1, name1, user2, name2) => {
 
 
     return await WriteChannel(channelId, user2, user1, name1);
+}
+
+export const createChannel = async (channelId) => {
+    return await set(ref(db, `/channel/${channelId}`), {
+        id: channelId
+    }).then(data => {
+        return true
+    }).catch(error => Promise.reject('failed'))
+}
+
+export const deleteChannel = async (channelId) => {
+    return await ref(db,
+        `/channel/${channelId}`)
+        .remove()
+        .then(data => true)
+        .catch(error =>
+        Promise.reject('remove failed'))
 }

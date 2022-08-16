@@ -4,7 +4,7 @@ import {useRef, useState} from "react";
 import {COLORS} from "../contants/Contants";
 import "@reach/dialog/styles.css"
 import inviteIcon from "../assets/utils/inviteIcon.png"
-import { RegisterVisitor } from "../tools/RegisterVisitor";
+import { RegisterVisitor } from "../api/RegisterVisitor";
 import {useAuth} from "../context/AuthProvider";
 
 export default function InviteModal ( { showDialog, close }) {
@@ -95,7 +95,7 @@ export default function InviteModal ( { showDialog, close }) {
                     <CopyButtonWrapper ref={copyButtonWrapper}>
                         <CopyButton onClick={() => {
 
-                            navigator.clipboard.writeText(visitor.link);
+                            navigator.clipboard.writeText(`https://spacechat.net/{visitor.link}`);
                             setCopySuccess(true);
                         }}>Copy{copySuccess && <CopySuccessPopup>Copy Succeeds!</CopySuccessPopup>}</CopyButton>
                     </CopyButtonWrapper>

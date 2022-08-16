@@ -1,8 +1,8 @@
 import SearchBar from "../ui/SearchBar";
 import ChannelCard from "../ui/ChannelCard";
-import {GetAvatar} from "../tools/GetAvatar";
+import {GetAvatar} from "../api/GetAvatar";
 import AddButton from "../ui/AddButton";
-import {FetchMessage} from "../tools/FetchMessage";
+import {FetchMessage} from "../api/FetchMessage";
 import styled, {keyframes} from "styled-components/macro";
 import {COLORS} from "../contants/Contants";
 import {useState} from "react";
