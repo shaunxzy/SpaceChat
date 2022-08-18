@@ -8,7 +8,7 @@ import Channel from "./Channel";
 import SideBar from "./SideBar";
 import ChatPage from "./ChatPage";
 import BlankPage from "./BlankPage";
-import {FetchUserChannels} from "../api/FetchUserChannels";
+import {FetchUserChannelSingular} from "../api/FetchUserChannelSingular";
 
 const PAGE_STYLES = {
     "default": { gridTemplateColumns: "100px 1fr" },
@@ -69,15 +69,19 @@ const UserPage = () => {
             })
         }
 
-        onChildAdded(ref(db, `users/${user.uid}/channels/singular`), () => {
-            FetchUserChannels(`users/${user.uid}/channels/singular`).then(data => {
+        onChildAdded(ref(db, user.uid), () => {
+            FetchUserChannelSingular(user.uid).then(data => {
                 setChannelBook(data)
+            }).catch(e => {
+                console.log(e.message)
             })
         })
 
-        onChildChanged(ref(db, `users/${user.uid}/channels/singular`), () => {
-            FetchUserChannels(`users/${user.uid}/channels/singular`).then(data => {
+        onChildChanged(ref(db, user.uid), () => {
+            FetchUserChannelSingular(user.uid).then(data => {
                 setChannelBook(data)
+            }).catch(e => {
+                console.log(e.message)
             })
         })
     }, [db, channel, ref, onChildAdded])

@@ -3,18 +3,16 @@ import {LoadMessage} from "./LoadInfo";
 import { db } from "../firebase/customFirebase";
 
 
-export const FetchMessage = async (pathWay) => {
+export const FetchChannelMessage = async (channelId) => {
 
-    return await get(child(ref(db), pathWay)).then(snapshot => {
+    return await get(child(ref(db), `channel/${channelId}`)).then(snapshot => {
         if (snapshot.exists()) {
             const messageString = snapshot.val();
             return LoadMessage(messageString);
         } else {
-            console.log(`no message in this channel ${pathWay}`)
-            return []
+            return Promise.reject(new Error('no such channel'))
         }
     })
-
 }
 
 /*

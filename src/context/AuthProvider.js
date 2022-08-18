@@ -51,7 +51,7 @@ const AuthProvider = ({ children }) => {
         return await signInWithEmailAndPassword(auth, email, password).then(UserCredential => {
             const user = UserCredential.user;
 
-            FetchUser(`users/${user.uid}`).then(userInfo => {
+            FetchUser(user.uid).then(userInfo => {
                 if (userInfo !== undefined) {
                     setCurrentUser(userInfo);
                     localStorage.setItem("user", JSON.stringify(userInfo));
@@ -92,7 +92,7 @@ const AuthProvider = ({ children }) => {
     useEffect(() => {
         //console.log('render')
         const unsubscribe = auth.onAuthStateChanged(user => {
-            FetchUser(`users/${user.uid}`).then(userInfo => {
+            FetchUser(user.uid).then(userInfo => {
                 if (userInfo !== undefined) {
                     setCurrentUser(userInfo);
                     localStorage.setItem("user", JSON.stringify(userInfo));
