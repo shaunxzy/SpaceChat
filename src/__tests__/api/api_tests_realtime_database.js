@@ -1,14 +1,14 @@
 import { FetchChannelMessage } from "../../api/FetchChannelMessage.js"
 import { FetchUserChannelSingular } from "../../api/FetchUserChannelSingular"
-import { createChannel, deleteChannel } from "../../api/CreateChannelSingular"
+import {addChannel, createChannel, deleteChannel, fetchChannels} from "../../api/HandleChannels"
 import {connectDatabaseEmulator} from "firebase/database"
 import {connectAuthEmulator, deleteUser, signInWithEmailAndPassword} from "firebase/auth"
-import { db, auth } from "../../firebase/customFirebase"
+import { db, auth, storage } from "../../firebase/customFirebase"
 import {CreateUser, deleteUserAuthFirebase, FetchUser, SetUser} from "../../api/FetchUser";
-
+import { connectStorageEmulator, uploadString, ref } from "firebase/storage"
 
 //test fetch channel api
-const channelId = 'simpletest'
+const channelId = 'f3r80u0fu09fu309ru'
 const userPassword = 'zxcxccadasd'
 const userEmail = 'zx45@illinois.edu'
 const userName = 'sxz'
@@ -17,7 +17,6 @@ const mockUid = 'z1cf4a64f6x546'
 const fooName = "foo"
 const fooEmail = "foo@me.com"
 const fooPassword = "zxc''123"
-
 
 const testUserAdm = 'jVuwXYSX0n4HVtxe7j5oi5mtCTzu'
 
@@ -36,11 +35,7 @@ const userInfo = {
 //connect to local emulator
 connectDatabaseEmulator(db, '127.0.0.1',9000)
 connectAuthEmulator(auth, 'http://localhost:9099')
-
-test('expect failure for fetch channel', () => {
-    const fc = FetchUserChannelSingular(userName)
-    return expect(fc).rejects.toThrow('user did not contain any channels or there did not exist such user')
-})
+connectStorageEmulator(storage, 'localhost', 9199)
 
 test('test set up and remove channel', () => {
     const ch = createChannel(channelId)
@@ -69,10 +64,10 @@ test('fetch => create => fetch => delete => fetch', async () => {
 
 test('set user based on parameters provided in this test', async () => {
     const usr = SetUser(userInfo)
-    await expect(usr).resolves.toHaveProperty('uid', 'username', 'email', 'password', 'channels', 'firstUse')
+    await expect(usr).resolves.toHaveProperty('uid', 'username', 'channels', 'firstUse')
 
 
-    await expect(FetchUser(userInfo.uid)).resolves.toHaveProperty('uid', 'username', 'email', 'password', 'channels', 'firstUse')
+    await expect(FetchUser(userInfo.uid)).resolves.toHaveProperty('uid', 'username', 'channels', 'firstUse')
 
 })
 
@@ -81,12 +76,14 @@ test('create sample user and register auth', async () => {
     await expect(usr).resolves.toBeTruthy()
 })
 
-test('fetch the data from another user', async () => {
+test('fetch user data from another user, expect failure', async () => {
+    await CreateUser({email: userEmail, password: userPassword, name: userName})
     await CreateUser({email: fooEmail, password: fooPassword, name:fooName})
 
     const prevUid = auth.currentUser.uid
 
-    await signInWithEmailAndPassword(auth, userEmail, userPassword).then(userCredential => true).catch(e => Promise.reject(e))
+    await signInWithEmailAndPassword(auth, userEmail, userPassword)
+        .then(userCredential => true).catch(e => Promise.reject(e))
 
     const ft = FetchUser(prevUid)
 
@@ -94,9 +91,28 @@ test('fetch the data from another user', async () => {
 
     await signInWithEmailAndPassword(auth, fooEmail, fooPassword)
 
-    const du = deleteUserAuthFirebase()
-
+    let du = deleteUserAuthFirebase()
     await expect(du).resolves.toBeTruthy()
 
+    await signInWithEmailAndPassword(auth, userEmail, userPassword)
+    du = deleteUserAuthFirebase()
+    await expect(du).resolves.toBeTruthy()
 })
 
+// TODO: mock friend invitation >>
+//  create user1 => user1 send invitation link for user2 =>
+//  user2 opened invitation link and be redirected to sign up page => user2 signed up and saw user1's channel
+
+test('setting up a new channel for an existing user', async () => {
+    await CreateUser({email: userEmail, password: userPassword, name: userName})
+
+    const user = auth.currentUser
+
+    await addChannel(user.uid, channelId, 'foo', 'singular')
+
+    const ch = fetchChannels(user.uid, 'singular')
+
+    await expect(ch).resolves.toHaveLength(1)
+
+    return true
+})

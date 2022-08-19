@@ -49,7 +49,7 @@ export default function Channel ({ user,
             if (b.timeStamp === undefined) {
                 return -1
             } else {
-                return b.timeStamp.milisec - a.timeStamp.milisec
+                return b.timeStamp - a.timeStamp
             }
         }
     }

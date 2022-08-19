@@ -15,8 +15,8 @@ export async function UseMessage ( {user, channel, message, time, userId, friend
     )
 
 
-    await set(ref(db, `users/${userId}/channels/singular/${friendId}/timeStamp`), {
-        milisec: objTime.getTime()
+    await set(ref(db, `users/${userId}/channels/singular/${friendId}`), {
+        timeStamp: objTime.getTime()
     }).then(() => {
         console.log(`channel ${friendId} updated`)
     })

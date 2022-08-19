@@ -20,8 +20,6 @@ export const LoadChannel = async channelString => {
         result.push({...value, id: key})
     }
 
-
-
     return result;
 }
 

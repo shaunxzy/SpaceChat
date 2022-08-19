@@ -4,6 +4,7 @@ import human from "../assets/utils/human.png";
 import cup from "../assets/utils/cup.png";
 import styled from "styled-components/macro";
 import {FetchUserChannelSingular} from "../api/FetchUserChannelSingular";
+import {fetchChannels} from "../api/HandleChannels";
 
 
 export default function SideBar ({ styleDispatch, setChannelBook, user, movePhase }) {
@@ -14,7 +15,7 @@ export default function SideBar ({ styleDispatch, setChannelBook, user, movePhas
             </UserIconWrapper>
             <GroupSelectWrapper>
                 <SingleGroup onClick={async () => {
-                    await FetchUserChannelSingular(user).then(
+                    await fetchChannels(user, 'singular').then(
                         dataSnapshot => {
                             //console.log(data)
                             movePhase();

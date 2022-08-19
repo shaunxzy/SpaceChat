@@ -33,8 +33,6 @@ export const CreateUser = async ( {email, password, name} ) => {
     const userInfo = {
         uid: uid,
         username: name,
-        email: email,
-        password: password,
         channels: {
             singular: {},
             multiple: {}
@@ -49,7 +47,7 @@ export const deleteUserAuthFirebase = async () => {
     const usr = auth.currentUser
     const uid = usr.uid
 
-    console.log(usr.uid)
+    //console.log(usr.uid)
 
     await remove(ref(db, `users/${uid}`)).catch(e => Promise.reject(e))
 
