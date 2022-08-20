@@ -15,7 +15,7 @@ export default function SideBar ({ styleDispatch, setChannelBook, user, movePhas
             </UserIconWrapper>
             <GroupSelectWrapper>
                 <SingleGroup onClick={async () => {
-                    await fetchChannels(user, 'singular').then(
+                    await fetchChannels('singular').then(
                         dataSnapshot => {
                             //console.log(data)
                             movePhase();

@@ -71,7 +71,7 @@ const UserPage = () => {
         }
 
         onChildAdded(ref(db, user.uid), () => {
-            fetchChannels(user.uid, 'singular').then(data => {
+            fetchChannels('singular').then(data => {
                 setChannelBook(data)
             }).catch(e => {
                 console.log(e.message)
@@ -79,7 +79,7 @@ const UserPage = () => {
         })
 
         onChildChanged(ref(db, user.uid), () => {
-            fetchChannels(user.uid, 'singular').then(data => {
+            fetchChannels('singular').then(data => {
                 setChannelBook(data)
             }).catch(e => {
                 console.log(e.message)

@@ -1,43 +1,18 @@
 import {v4 as uuidv4} from 'uuid';
 import {child, get, remove, ref, set} from "firebase/database";
-import { db } from "../firebase/customFirebase";
+import { db, auth } from "../firebase/customFirebase";
 import {LoadChannel, LoadMessage} from "./LoadInfo";
 
-//write channelId in user's contact book
-// channel type can only be 'singular' or 'multiple'
-const SetChannel = async (user, channelId, channelName, channelType) => {
-    if (channelType === 'singular') {
 
-    } else if (channelType === '') {
-
-    }
-
-    /*
-    set(ref(db, `users/${user1}/channels/singular/${user2}`), {
-        channelId: channelId
-    }).then(data => {
-        console.log("channel set up success");
-    })
-     */
-}
-
-//user1 and user2 are ids.
-export const HandleChannels = async (user1, name1, user2, name2) => {
+export const createChannel = async () => {
     const channelId = uuidv4()
-
-
-    SetChannel(channelId, user1, user2, name2).then(data => console.log(`user1: ${data}`));
-
-
-
-    return await SetChannel(channelId, user2, user1, name1);
-}
-
-export const createChannel = async (channelId) => {
     return await set(ref(db, `channel/${channelId}`), {
         id: channelId
-    }).then(snapshot => `channel ${channelId} created`)
-        .catch(error => Promise.reject(error.message))
+    }).then(snapshot => {
+        console.log(`channel ${channelId} created`)
+        return channelId
+    })
+        .catch(error => Promise.reject(error))
 }
 
 export const deleteChannel = async (channelId) => {
@@ -45,27 +20,35 @@ export const deleteChannel = async (channelId) => {
         `channel/${channelId}`))
         .then(snapshot => `channel ${channelId} removed`)
         .catch(error =>
-        Promise.reject(error.message))
+        Promise.reject(error))
 }
 
-export const addChannel = async (userId, channelId, channelName, channelType) => {
+// add a specific channel to a user folder
+export const addChannel = async (channelId, channelName, channelType) => {
     const objTime = new Date()
+
+    const userId = auth.currentUser.uid
+
+    console.log(userId)
 
     if (channelType === 'singular') {
         return await set(ref(db, `users/${userId}/channel/singular/${channelName}`),
             {channelId, name:channelName, timeStamp: objTime.getTime()})
             .then(data => true)
-            .catch(error => Promise.reject(error.message))
+            .catch(error => Promise.reject(error))
     } else if (channelType === 'multiple') {
         return await set(ref(db, `users/${userId}/channel/multiple/${channelName}`),
             {channelId, name:channelName, timeStamp: objTime.getTime()})
-            .then(data => true).catch(error => Promise.reject(error.message))
+            .then(data => true).catch(error => Promise.reject(error))
     } else {
         Promise.reject(new Error(`expect channelType to be either singular or multiple, received ${channelType}`))
     }
 }
 
-export const fetchChannels = async (userId, channelType) => {
+// fetch a list of channels from a user folder
+export const fetchChannels = async (channelType) => {
+    const userId = auth.currentUser.uid
+
     if (channelType === 'singular') {
         return await get(child(ref(db), `users/${userId}/channel/singular`))
             .then(snapshot => {

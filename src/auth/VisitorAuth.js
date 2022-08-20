@@ -4,7 +4,6 @@ import {useEffect, useRef, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 
 import {useAuth} from "../context/AuthProvider";
-import { HandleChannels } from "../api/HandleChannels";
 
 export default function VisitorAuth() {
     const { id } = useParams()
@@ -23,7 +22,7 @@ export default function VisitorAuth() {
             console.log(`host is ${tempVisitor.hostname}`)
             console.log(tempVisitor)
             if (tempVisitor) {
-                HandleChannels(`visitors/${id}/channel/${tempVisitor.host}`,
+                foo(`visitors/${id}/channel/${tempVisitor.host}`,
                     tempVisitor.hostname,
                     `users/${tempVisitor.host}/channels/singular/${id}`,
                     tempVisitor.name).then(data => {

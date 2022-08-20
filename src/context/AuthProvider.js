@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "fire
 import {useContext, useEffect, useState} from "react";
 import AuthContext from "./AuthContext";
 import {FetchVisitor} from "../api/FetchVisitor";
-import {FetchUser} from "../api/FetchUser";
+import {HandleUser} from "../api/HandleUser";
 
 export function useAuth() {
     return useContext(AuthContext)
@@ -51,7 +51,7 @@ const AuthProvider = ({ children }) => {
         return await signInWithEmailAndPassword(auth, email, password).then(UserCredential => {
             const user = UserCredential.user;
 
-            FetchUser(user.uid).then(userInfo => {
+            HandleUser(user.uid).then(userInfo => {
                 if (userInfo !== undefined) {
                     setCurrentUser(userInfo);
                     localStorage.setItem("user", JSON.stringify(userInfo));
@@ -92,7 +92,7 @@ const AuthProvider = ({ children }) => {
     useEffect(() => {
         //console.log('render')
         const unsubscribe = auth.onAuthStateChanged(user => {
-            FetchUser(user.uid).then(userInfo => {
+            HandleUser(user.uid).then(userInfo => {
                 if (userInfo !== undefined) {
                     setCurrentUser(userInfo);
                     localStorage.setItem("user", JSON.stringify(userInfo));
