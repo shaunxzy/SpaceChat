@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from "styled-components/macro";
-import { getSharedAvatarURLs } from '../../tools/Avatar';
+import { getSharedAvatarURLs } from '../../api/Avatar';
 
 
 export default function DefaultAvatarSelector({ style, onDismiss, onSelected }) {

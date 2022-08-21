@@ -1,36 +1,57 @@
-const { initializeApp } = require('firebase/app')
-const { uploadBytes, ref, uploadString, getStorage, connectStorageEmulator } = require("firebase/storage")
+import { storage } from "../../firebase/customFirebase";
+import { connectStorageEmulator, deleteObject, getBytes, ref, uploadBytes } from "firebase/storage";
+import { getAvatarURL, uploadAvatar } from "../../api/Avatar";
 
-const config = {
-    firebaseConfig: {
-        apiKey: "AIzaSyAlQsYzTiE3txQTVBR2bvYzmmECURJjSjM",
-        authDomain: "project-480cb.firebaseapp.com",
-        databaseURL: "https://project-480cb-default-rtdb.firebaseio.com",
-        projectId: "project-480cb",
-        storageBucket: "project-480cb.appspot.com",
-        messagingSenderId: "445657898125",
-        appId: "1:445657898125:web:ba81ec887fc4bfa9c396c4",
-        measurementId: "G-YM01K5GLQP"
-    }
-}
+connectStorageEmulator(storage, "127.0.0.1", 9199);
 
 
-const app = initializeApp(config.firebaseConfig)
+it("can upload file to firebase storage", async () => {
+    const buffer = new Uint8Array([1, 1, 1, 1, 1, 1]);
+    const result = await uploadBytes(
+        ref(storage, "test/hello"),
+        buffer,
+        { contentType: "plain/text" });
+    // console.log(result);
+    expect(result.metadata.size).toBe(6);
+});
 
-const message2 = '5b6p5Y+344GX44G+44GX44Gf77yB44GK44KB44Gn44Go44GG77yB';
+it("gets an URL of an uploaded avatar", async () => {
+    const uid = "asdfghjkl";
 
-const storage = getStorage()
+    await uploadBytes(
+        ref(storage, `avatar/uploaded/${uid}`),
+        new Uint8Array([1, 1, 1, 1]),
+        { contentType: "image/png" }
+    );
 
-connectStorageEmulator(storage, 'localhost', 9199)
+    const url = await getAvatarURL(uid);
+    // console.log(url);
+    expect(url).toContain(`avatar%2Fuploaded%2F${uid}`);
+});
 
-const mockUpload = async () => {
-    return await uploadString(ref(storage, 'someChild'), message2, 'base64').then((snapshot) => {
-        return 'Uploaded a base64 string!';
-    }).catch(e => {
-        return Promise.reject(new Error(e))
-    });
-}
+it("gets an URL of default avatar if no uploaded", async () => {
+    const uid = "non-existing-uid";
 
-test('carefully test if storage can be used', async () => {
-    await expect(mockUpload()).resolves.toBe('Uploaded a base64 string!')
-})
+    await uploadBytes(
+        ref(storage, `/avatar/shared/thiscatdoesnotexist-1.com.jpeg`),
+        new Uint8Array([1, 1, 1, 1]),
+        { contentType: "image/png" }
+    );
+
+    const url = await getAvatarURL(uid);
+    // console.log(url);
+    expect(url).toContain("avatar%2Fshared%2Fthiscatdoesnotexist-1.com.jpeg");
+});
+
+it("uploads avatar", async () => {
+    const uid = "uploaded_avatar";
+
+    await uploadAvatar(uid, new Uint8Array([1, 1, 1, 1]));
+
+    const rAvatar = ref(storage, `avatar/uploaded/${uid}`);
+    const downloaded = await getBytes(rAvatar);
+    // console.log(downloaded);
+    expect(downloaded.byteLength).toBe(4);
+
+    await deleteObject(rAvatar);
+});

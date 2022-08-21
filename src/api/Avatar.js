@@ -34,6 +34,5 @@ export async function uploadAvatar(uid, image) {
 
 export async function selectFromDefaultAvatar(uid, avatarRef) {
     const selectedImage = await getBlob(avatarRef);
-    const refAvatar = ref(storage, `/avatar/uploaded/${uid}`);
-    await uploadBytes(refAvatar, selectedImage);
+    await uploadAvatar(uid, selectedImage);
 }
