@@ -5,7 +5,7 @@ import {useEffect, useState} from "react";
 
 import ChatPage from "./ChatPage";
 import {onChildAdded, ref} from "firebase/database";
-import {FetchMessage} from "../api/FetchMessage";
+import {FetchChannelMessage} from "../api/FetchChannelMessage";
 import {db} from "../firebase/customFirebase";
 import {FetchVisitor} from "../api/FetchVisitor";
 import {LoadChannelVisitor} from "../api/LoadInfo";
@@ -34,13 +34,8 @@ export default function Visitor() {
                 setChannel(channelId)
                 console.log(`successfully set up channel ${channelId}`)
 
-                FetchMessage(`channel/${channelId}`).then(msg => {
-                    if (msg !== undefined) {
-                        console.log('found channel')
-                        setChatMessaging(msg);
-                    } else {
-                        console.log('no channel found')
-                    }
+                FetchChannelMessage(channel).then(dataSnapshot => {
+                    setChatMessaging(dataSnapshot.message);
                 })
             })
         }
@@ -53,10 +48,8 @@ export default function Visitor() {
     useEffect(() => {
         if (channel !== "") {
             onChildAdded(ref(db, `channel/${channel}`), () => {
-                FetchMessage(`channel/${channel}`).then(data => {
-                    if (data !== null) {
-                        setChatMessaging(data);
-                    }
+                FetchChannelMessage(channel).then(dataSnapshot => {
+                    setChatMessaging(dataSnapshot.message);
                 })
             })
         }

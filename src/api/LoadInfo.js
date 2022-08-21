@@ -1,11 +1,16 @@
 export const LoadMessage  = (messageString) => {
-    const result = []
+    const message = []
+    let id;
 
     for (const [key, value] of Object.entries(messageString)) {
-        result.push({...value, time: new Date(key)});
+        if (key === 'id') {
+            id = value
+        } else {
+            message.push({...value, time: new Date(key)});
+        }
     }
 
-    return result;
+    return {id, message};
 }
 
 export const LoadChannel = async channelString => {
@@ -14,8 +19,6 @@ export const LoadChannel = async channelString => {
     for (const [key, value] of Object.entries(channelString)) {
         result.push({...value, id: key})
     }
-
-
 
     return result;
 }

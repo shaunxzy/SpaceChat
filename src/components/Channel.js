@@ -2,7 +2,7 @@ import SearchBar from "../ui/SearchBar";
 import ChannelCard from "../ui/ChannelCard";
 import {GetAvatar} from "../api/GetAvatar";
 import AddButton from "../ui/AddButton";
-import {FetchMessage} from "../api/FetchMessage";
+import {FetchChannelMessage} from "../api/FetchChannelMessage";
 import styled, {keyframes} from "styled-components/macro";
 import {COLORS} from "../contants/Contants";
 import {useState} from "react";
@@ -23,12 +23,13 @@ export default function Channel ({ user,
     const close = () => {setAddModal(false)};
 
     // display chat page of a certain channel
-    const RetrieveChatBook = async ( {channel, friend, friendId} ) => {
+    const RetrieveChatBook = ( {channel, friend, friendId} ) => {
 
         setFriend({name: friend, id: friendId})
-        FetchMessage(`channel/${channel}`).then(data => {
+        FetchChannelMessage(channel).then(dataSnapshot => {
             //console.log(data)
-            setChatMessaging(data);
+
+            setChatMessaging(dataSnapshot.message);
         }).then(() =>
             setChannel(channel))
 
@@ -48,7 +49,7 @@ export default function Channel ({ user,
             if (b.timeStamp === undefined) {
                 return -1
             } else {
-                return b.timeStamp.milisec - a.timeStamp.milisec
+                return b.timeStamp - a.timeStamp
             }
         }
     }
